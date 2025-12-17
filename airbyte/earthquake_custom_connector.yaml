@@ -1,0 +1,208 @@
+### This is the yaml configuration for the custom Airbyte connector
+### that utilizes the USGS Earthquake API.
+### The API returns earthquake events.
+
+version: 7.0.4
+
+type: DeclarativeSource
+
+check:
+  type: CheckStream
+  stream_names:
+    - Earthquake
+
+streams:
+  - type: DeclarativeStream
+    name: Earthquake
+    retriever:
+      type: SimpleRetriever
+      requester:
+        type: HttpRequester
+        url: https://earthquake.usgs.gov/fdsnws/event/1/query
+        http_method: GET
+        request_parameters:
+          format: "geojson\r\n"
+      record_selector:
+        type: RecordSelector
+        extractor:
+          type: DpathExtractor
+          field_path:
+            - features
+    primary_key: id
+    schema_loader:
+      type: InlineSchemaLoader
+      schema:
+        type: object
+        $schema: http://json-schema.org/schema#
+        required:
+          - id
+          - cursor_time
+        properties:
+          type:
+            type:
+              - string
+              - "null"
+          id:
+            type: string
+          geometry:
+            type:
+              - object
+              - "null"
+            properties:
+              type:
+                type:
+                  - string
+                  - "null"
+              coordinates:
+                type:
+                  - array
+                  - "null"
+                items:
+                  type:
+                    - number
+                    - "null"
+          properties:
+            type:
+              - object
+              - "null"
+            properties:
+              type:
+                type:
+                  - string
+                  - "null"
+              cdi:
+                type:
+                  - number
+                  - "null"
+              gap:
+                type:
+                  - number
+                  - "null"
+              ids:
+                type:
+                  - string
+                  - "null"
+              mag:
+                type:
+                  - number
+                  - "null"
+              mmi:
+                type:
+                  - number
+                  - "null"
+              net:
+                type:
+                  - string
+                  - "null"
+              nst:
+                type:
+                  - number
+                  - "null"
+              rms:
+                type:
+                  - number
+                  - "null"
+              sig:
+                type:
+                  - number
+                  - "null"
+              url:
+                type:
+                  - string
+                  - "null"
+              code:
+                type:
+                  - string
+                  - "null"
+              dmin:
+                type:
+                  - number
+                  - "null"
+              felt:
+                type:
+                  - number
+                  - "null"
+              time:
+                type:
+                  - number
+                  - "null"
+              alert:
+                type:
+                  - string
+                  - "null"
+              place:
+                type:
+                  - string
+                  - "null"
+              title:
+                type:
+                  - string
+                  - "null"
+              types:
+                type:
+                  - string
+                  - "null"
+              detail:
+                type:
+                  - string
+                  - "null"
+              status:
+                type:
+                  - string
+                  - "null"
+              magType:
+                type:
+                  - string
+                  - "null"
+              sources:
+                type:
+                  - string
+                  - "null"
+              tsunami:
+                type:
+                  - number
+                  - "null"
+              updated:
+                type:
+                  - number
+                  - "null"
+          cursor_time:
+            type: number
+        additionalProperties: true
+    transformations:
+      - type: AddFields
+        fields:
+          - type: AddedFieldDefinition
+            path:
+              - cursor_time
+            value: "{{ record['properties']['updated'] }}"
+            value_type: integer
+    incremental_sync:
+      type: IncrementingCountCursor
+      start_value: 1765785600000
+      cursor_field: cursor_time
+
+spec:
+  type: Spec
+  connection_specification:
+    type: object
+    properties: {}
+
+metadata:
+  testedStreams:
+    stream_0:
+      streamHash: ad11f9fa446b445a056b0f48d54e74059e0bc977
+    Earthquake:
+      isStale: true
+      hasRecords: true
+      streamHash: 6cb077b60f12441bbeb3456627537f533bab6595
+      hasResponse: true
+      primaryKeysAreUnique: true
+      primaryKeysArePresent: true
+      responsesAreSuccessful: true
+  autoImportSchema:
+    Earthquake: true
+
+concurrency_level:
+  type: ConcurrencyLevel
+  default_concurrency: 1
