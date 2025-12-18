@@ -1,11 +1,17 @@
 [sqlfluff]
 templater = dbt
 dialect = postgres
+exclude_rules= LT12
+
+[sqlfluff:indentation]
+indented_joins = False
+indented_using_on = True
+template_blocks_indent = False
 
 [sqlfluff:templater:dbt]
 project_dir = .
 profiles_dir = .
-target = lint
+target = dev
 
 [sqlfluff:templater:jinja]
 apply_dbt_builtins = True
