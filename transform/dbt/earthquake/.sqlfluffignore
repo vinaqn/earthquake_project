@@ -1,0 +1,4 @@
+testing.sql
+*.tsql
+/macros/
+/dbt_packages/
