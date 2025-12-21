@@ -30,15 +30,15 @@ jobs:
         working-directory: transform/dbt/earthquake
         env:
           # Secrets (from GitHub Environment: earthquake_project)
-          SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
-          SNOWFLAKE_USER: ${{ secrets.SNOWFLAKE_USER }}
-          SNOWFLAKE_PASSWORD: ${{ secrets.SNOWFLAKE_PASSWORD }}
+          account: ${{ secrets.SNOWFLAKE_ACCOUNT }}
+          user: ${{ secrets.SNOWFLAKE_USER }}
+          password: ${{ secrets.SNOWFLAKE_PASSWORD }}
 
           # Variables (from GitHub Environment: earthquake_project)
-          SNOWFLAKE_ROLE: ${{ vars.SNOWFLAKE_ROLE }}
-          SNOWFLAKE_DATABASE: ${{ vars.SNOWFLAKE_DATABASE }}
-          SNOWFLAKE_WAREHOUSE: ${{ vars.SNOWFLAKE_WAREHOUSE }}
-          SNOWFLAKE_SCHEMA: ${{ vars.SNOWFLAKE_SCHEMA }}
+          role: ${{ vars.SNOWFLAKE_ROLE }}
+          database: ${{ vars.SNOWFLAKE_DATABASE }}
+          warehouse: ${{ vars.SNOWFLAKE_WAREHOUSE }}
+          schema: earthquake_dev
           DBT_TARGET: dev
         run: |
           sqlfluff lint models
