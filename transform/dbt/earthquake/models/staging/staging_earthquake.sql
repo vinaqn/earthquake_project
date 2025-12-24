@@ -17,10 +17,10 @@ select
     properties:"mag"::float as magnitude,
     properties:"time"::integer as time_ms,
     {{ dbt_date.from_unixtimestamp("time_ms", format="milliseconds") }} as occurred_at,
-    properties:"url" as url,
+    properties:"url" as web_url,
     properties:"magType" as magtype,
-    properties:"place" as place,
-    properties:"title" as title
+    properties:"place" as earthquake_place,
+    properties:"title" as page_title
 from {{ source('earthquake', 'earthquake') }}
 
 {% if is_incremental() %}
