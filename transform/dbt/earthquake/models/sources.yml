@@ -9,3 +9,4 @@ sources:
     schema: amazon_s3
     tables:
       - name: allcountries
+      - name: countries_regional_codes

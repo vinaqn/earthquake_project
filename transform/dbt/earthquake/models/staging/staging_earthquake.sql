@@ -8,12 +8,12 @@
 
 select
     id as earthquake_id,
-    cursor_time::integer as cursor_time_ms,
+    e.cursor_time::integer as cursor_time_ms,
     {{ dbt_date.from_unixtimestamp("cursor_time_ms", format="milliseconds") }}
         as updated_at,
-    geometry:"coordinates"[0]::float as longitude,
-    geometry:"coordinates"[1]::float as latitude,
-    geometry:"coordinates"[2]::float as depth_km,
+    geometry:"coordinates"[0]::decimal(9,6) as longitude,
+    geometry:"coordinates"[1]::decimal(9,6) as latitude,
+    geometry:"coordinates"[2]::decimal(9,6) as depth_km,
     properties:"mag"::float as magnitude,
     properties:"time"::integer as time_ms,
     {{ dbt_date.from_unixtimestamp("time_ms", format="milliseconds") }} as occurred_at,
@@ -21,8 +21,8 @@ select
     properties:"magType" as magtype,
     properties:"place" as earthquake_place,
     properties:"title" as page_title
-from {{ source('earthquake', 'earthquake') }}
+from {{ source('earthquake', 'earthquake') }} e
 
 {% if is_incremental() %}
-where cursor_time_ms > (select max(cursor_time_ms) from {{ this }})
+where e.cursor_time::integer > (select max(cursor_time_ms) from {{ this }})
 {% endif %}
