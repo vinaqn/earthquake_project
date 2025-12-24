@@ -1,8 +1,16 @@
 from pathlib import Path
 
-from dagster import definitions, load_from_defs_folder
+from dagster import Definitions, load_from_defs_folder
+from src.orchestration.defs.assets.airbyte import airbyte_assets
+from dagster_airbyte import AirbyteResource
 
 
-@definitions
-def defs():
-    return load_from_defs_folder(path_within_project=Path(__file__).parent)
+defs=Definitions(
+    assets=[*airbyte_assets],
+    resources={
+        "airbyte": AirbyteResource(
+            host="localhost",
+            port="8000",
+        )
+    }
+)
