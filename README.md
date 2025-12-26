@@ -36,4 +36,4 @@ dbt is used to transform data within Snowflake, staging raw ingested data in a *
 ### dagster
 Dagster is used as the orchestration layer for this project, leveraging an asset-based approach to model data dependencies across the pipeline. It schedules and monitors Airbyte sync jobs and triggers downstream dbt transformations using eager execution, ensuring models run automatically as soon as upstream data is updated. This setup provides end-to-end data lineage, dependency management, and observability across the ingestion and transformation layers.
 
-![Data Lineage in Dagster](images/Data Lineage - Dagster.png)
+![Data Lineage in Dagster](images/dagster_data_lineage.png)
